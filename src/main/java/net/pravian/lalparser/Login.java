@@ -145,15 +145,15 @@ public class Login {
             return false;
         }
 
-        if (comment != null && !comment.isEmpty()) { // Still unstrict equals for comments
-            return comment.equals(login.getComment());
+        if (isComment()) { // Still unstrict equals for comments
+            return login.isComment() && comment.equals(login.getComment());
         }
 
-        return this.login.equals(login.getLogin())
-                && this.password.equals(login.getPassword())
-                && this.displayName.equals(login.getDisplayName())
-                && this.email.equals(login.getEmail())
-                && this.oldPassword.equals(login.getOldPassword())
+        return Objects.equals(this.login, login.login)
+                && Objects.equals(this.password, login.password)
+                && Objects.equals(this.displayName, login.displayName)
+                && Objects.equals(this.email, login.email)
+                && Objects.equals(this.oldPassword, login.oldPassword)
                 && this.invalid == login.isInvalid();
     }
 
@@ -161,7 +161,7 @@ public class Login {
     public int hashCode() {
         int hash = 7;
 
-        if (comment != null && !comment.isEmpty()) {
+        if (isComment()) {
             hash = 11 * hash + Objects.hashCode(this.comment);
             return hash;
         }
