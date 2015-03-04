@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2015 Jerom van der Sar.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@ package net.pravian.lalparser;
  *
  * @since 1.0
  */
-public class Validate {
+class Validate {
 
     public static void notNull(Object o) {
         notNull(o, "Object may not be null");

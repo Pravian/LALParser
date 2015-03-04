@@ -42,9 +42,14 @@ import java.util.regex.Pattern;
  */
 public class LALParser implements List<Login> {
 
+    /**
+     * The Pattern for matching LAL lines.
+     *
+     * @see java.util.regex.Pattern
+     */
     public static final Pattern LOGIN_PATTERN;
 
-    public final List<Login> logins;
+    private final List<Login> logins;
 
     static {
         final StringBuilder p = new StringBuilder();
@@ -70,10 +75,19 @@ public class LALParser implements List<Login> {
         LOGIN_PATTERN = Pattern.compile(p.toString());
     }
 
+    /**
+     * Creates a new empty LAL parser.
+     */
     public LALParser() {
         logins = new ArrayList<>();
     }
 
+    /**
+     * Attempts to parse a file and stores the parsed body in this parser.
+     *
+     * @param file The file to parse.
+     * @throws RuntimeException if the file could not be found.
+     */
     public void load(File file) {
         Validate.notNull(file, "File may not be null");
         final FileInputStream stream;
@@ -87,18 +101,36 @@ public class LALParser implements List<Login> {
         load(stream);
     }
 
+    /**
+     * Attempts to parse an InputStream and stores the parsed body in this parser.
+     *
+     * @param stream The stream to parse.
+     */
     public void load(InputStream stream) {
         Validate.notNull(stream, "Stream may not be null");
 
         load(new InputStreamReader(stream, StandardCharsets.UTF_8));
     }
 
+    /**
+     * Attempts to parse a string and stores the parsed body in this parser.
+     *
+     * <b>Note</b>: The supplied string may be a multi-line LAL document.
+     *
+     * @param string The string to parse.
+     */
     public void load(String string) {
         Validate.notNull(string, "String may not be null");
 
         load(new StringReader(string));
     }
 
+    /**
+     * Attempts to parse a Reader and stores the parsed body in this parser.
+     *
+     * @param reader The reader to parse.
+     * @throws RuntimeException if the reader could not be read from.
+     */
     public void load(Reader reader) {
         Validate.notNull(reader, "Reader may not be null");
 
@@ -127,12 +159,22 @@ public class LALParser implements List<Login> {
         }
     }
 
+    /**
+     * Writes the contents of this parser to an OutputStream.
+     *
+     * @param stream The OutputStream to write to.
+     */
     public void write(OutputStream stream) {
         Validate.notNull(stream, "Stream may not be null");
 
         write(new OutputStreamWriter(stream, StandardCharsets.UTF_8));
     }
 
+    /**
+     * Writes the contents of this parser to a Writer.
+     *
+     * @param writer The Writer to write to.
+     */
     public void write(Writer writer) {
         Validate.notNull(writer, "Writer may not be null");
 
@@ -272,6 +314,12 @@ public class LALParser implements List<Login> {
         return logins.subList(i, i1);
     }
 
+    /**
+     * Parses a String to a Login.
+     *
+     * @param line The line to parse.
+     * @return The parsed login, or null if the line is not in the correct format.
+     */
     public static Login parse(String line) {
         Validate.notEmpty(line, "Line may not be empty");
 
@@ -304,6 +352,13 @@ public class LALParser implements List<Login> {
                 invalid);
     }
 
+    /**
+     * Compiles a Login to a String.
+     *
+     * @param login The login to parse.
+     * @return The parsed login.
+     * @throws IllegalArgumentException if the Login does not contain at least a password and username.
+     */
     public static String compile(Login login) {
         Validate.notNull(login, "Login may not be null");
 
