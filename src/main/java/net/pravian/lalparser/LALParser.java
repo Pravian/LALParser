@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2015 Jerom van der Sar.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,11 +40,35 @@ import java.util.regex.Pattern;
  *
  * @since 1.0
  */
-public class LALParser implements Collection<Login> {
+public class LALParser implements List<Login> {
 
     public static final Pattern LOGIN_PATTERN;
 
     public final List<Login> logins;
+
+    static {
+        final StringBuilder p = new StringBuilder();
+        final String user = "[\\w@\\.\\-]+";
+        final String complex = "[\\w@!@#$%^&*/(){}\\[<>,.?|\\.\\-\\]]+"; // Passwords, email
+
+        // Demo: http://www.regexr.com/3ac4n
+        //
+        p.append("^"); // Start
+        p.append("(\\/\\/.*)|"); // 1 Comment
+        p.append("(?:"); // OR enclosing group
+
+        //p.append("(\\u002e)?"); // 2 Invalid - Hacked out
+        p.append("(" + user + ")").append(":"); // 2 Login
+        p.append("(" + complex + ")"); // 3 Password
+        p.append("(?: \\((" + complex + ")\\))?"); // 4 Display name
+        p.append("(?: \\{(" + complex + ")\\})?"); // 5 Email
+        p.append("(?: \\[(" + complex + ")\\])?"); // 6 Old password
+
+        p.append(")"); // End OR enclosing group
+        p.append("$"); // End
+
+        LOGIN_PATTERN = Pattern.compile(p.toString());
+    }
 
     public LALParser() {
         logins = new ArrayList<>();
@@ -84,9 +109,9 @@ public class LALParser implements Collection<Login> {
         try {
             String line;
 
-            while ((line = input.readLine().trim()) != null) {
+            while ((line = input.readLine()) != null) {
 
-                final Login login = parse(line);
+                final Login login = parse(line.trim());
 
                 if (login != null) {
                     logins.add(login);
@@ -197,28 +222,54 @@ public class LALParser implements Collection<Login> {
         logins.clear();
     }
 
-    static {
-        final StringBuilder p = new StringBuilder();
-        final String user = "[\\w@\\.\\-]+";
-        final String complex = "[\\w@!@#$%^&*/(){}\\[<>,.?|\\.\\-\\]]+"; // Passwords, email
+    @Override
+    public boolean addAll(int i, Collection<? extends Login> clctn) {
+        return logins.addAll(clctn);
+    }
 
-        // Demo: http://www.regexr.com/3ac4n
-        //
-        p.append("^"); // Start
-        p.append("(\\/\\/.*)|"); // 1 Comment
-        p.append("(?:"); // OR enclosing group
+    @Override
+    public Login get(int i) {
+        return logins.get(i);
+    }
 
-        //p.append("(\\u002e)?"); // 2 Invalid - Hacked out
-        p.append("(" + user + ")").append(":"); // 2 Login
-        p.append("(" + complex + ")"); // 3 Password
-        p.append("(?: \\((" + complex + ")\\))?"); // 4 Display name
-        p.append("(?: \\{(" + complex + ")\\})?"); // 5 Email
-        p.append("(?: \\[(" + complex + ")\\])?"); // 6 Old password
+    @Override
+    public Login set(int i, Login e) {
+        return logins.set(1, e);
+    }
 
-        p.append(")"); // End OR enclosing group
-        p.append("$"); // End
+    @Override
+    public void add(int i, Login e) {
+        logins.add(i, e);
+    }
 
-        LOGIN_PATTERN = Pattern.compile(p.toString());
+    @Override
+    public Login remove(int i) {
+        return logins.remove(i);
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        return logins.indexOf(o);
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        return logins.lastIndexOf(o);
+    }
+
+    @Override
+    public ListIterator<Login> listIterator() {
+        return logins.listIterator();
+    }
+
+    @Override
+    public ListIterator<Login> listIterator(int i) {
+        return logins.listIterator(i);
+    }
+
+    @Override
+    public List<Login> subList(int i, int i1) {
+        return logins.subList(i, i1);
     }
 
     public static Login parse(String line) {

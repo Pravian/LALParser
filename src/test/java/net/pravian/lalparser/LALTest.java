@@ -20,7 +20,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    LALParserTest.class
+    LALParserTest.class,
+    LALFileTest.class
 })
 public class LALTest {
 }

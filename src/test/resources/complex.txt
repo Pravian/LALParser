@@ -1,0 +1,6 @@
+// Comment
+user:pass
+user:pass (display)
+.user:pass (display) {email}
+user:pass (display) {email} [oldpass]
+.user:pass (display) {email} [oldpass]
